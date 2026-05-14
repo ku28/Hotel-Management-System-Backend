@@ -16,10 +16,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
     Page<Reservation> findByCheckInDateGreaterThanEqualAndCheckOutDateLessThanEqual(
             LocalDate startDate, LocalDate endDate, Pageable pageable);
 
-    Page<Reservation> findByRoom_RoomId(Integer roomId, Pageable pageable);
-
-    boolean existsByRoom_RoomIdAndCheckInDateLessThanEqualAndCheckOutDateGreaterThanEqual(
-            Integer roomId, LocalDate checkOutDate, LocalDate checkInDate);
+   // todo pending room 2 pending
 
     long count();
 }
