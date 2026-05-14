@@ -13,9 +13,9 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
 
     Page<Review> findByRating(Integer rating, Pageable pageable);
 
+    Page<Review> findByReservation_ReservationId(Integer reservationId, Pageable pageable);
 
     Optional<Review> findFirstByOrderByReviewDateDesc();
 
-//    To-Do Resarvation
-
+    boolean existsByReservation_ReservationId(Integer reservationId);
 }
