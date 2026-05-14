@@ -17,4 +17,6 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer> {
             String name, String location, Pageable pageable);
 
     boolean existsByNameAndLocation(String name, String location);
+
+    // one pending
 }
