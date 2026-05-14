@@ -1,0 +1,22 @@
+package com.hotelmanagement.hotelmanagementbackend.reservation.repository;
+
+import com.hotelmanagement.hotelmanagementbackend.reservation.entity.Reservation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
+
+@Repository
+public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
+
+    Page<Reservation> findByGuestEmailIgnoreCase(String guestEmail, Pageable pageable);
+
+    Page<Reservation> findByCheckInDateGreaterThanEqualAndCheckOutDateLessThanEqual(
+            LocalDate startDate, LocalDate endDate, Pageable pageable);
+
+   // todo pending room 2 pending
+
+    long count();
+}
