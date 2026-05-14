@@ -11,5 +11,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer> {
 
     Page<Payment> findByPaymentStatusIgnoreCase(String paymentStatus, Pageable pageable);
 
-//    to do reservation connection
+    Page<Payment> findByReservation_ReservationId(Integer reservationId, Pageable pageable);
+
+    boolean existsByReservation_ReservationId(Integer reservationId);
 }
