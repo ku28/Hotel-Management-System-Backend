@@ -10,18 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface RoomRepository extends JpaRepository<Room, Integer> {
 
     Page<Room> findByIsAvailableTrue(Pageable pageable);
-
-    Page<Room> findByRoomType_RoomTypeIdAndIsAvailableTrue(Integer roomTypeId, Pageable pageable);
-
-    Page<Room> findByRoomType_RoomTypeId(Integer roomTypeId, Pageable pageable);
-
-    Page<Room> findByAmenities_AmenityId(Integer amenityId, Pageable pageable);
-
-    boolean existsByRoomNumberAndRoomType_RoomTypeId(Integer roomNumber, Integer roomTypeId);
-
-    Page<Room> findByHotel_HotelId(Integer hotelId, Pageable pageable);
-
-    long countByHotel_HotelIdAndIsAvailableTrue(Integer hotelId);
-
-    long countByHotel_HotelId(Integer hotelId);
+//to do pending
 }
