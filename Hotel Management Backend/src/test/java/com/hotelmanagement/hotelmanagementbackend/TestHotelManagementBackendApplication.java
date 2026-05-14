@@ -1,6 +1,7 @@
 package com.hotelmanagement.hotelmanagementbackend;
 
 import org.springframework.boot.SpringApplication;
+import org.testcontainers.utility.TestcontainersConfiguration;
 
 public class TestHotelManagementBackendApplication {
 
