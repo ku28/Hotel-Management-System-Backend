@@ -1,6 +1,7 @@
 package com.hotelmanagement.hotelmanagementbackend.room.repository;
 
 import com.hotelmanagement.hotelmanagementbackend.room.entity.RoomType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,11 @@ class RoomTypeRepositoryTest {
 
     @Autowired
     private RoomTypeRepository roomTypeRepository;
+
+    @BeforeEach
+    void setUp() {
+        roomTypeRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("shouldReturnRoomTypesByNameIgnoreCase")

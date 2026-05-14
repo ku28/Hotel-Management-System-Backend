@@ -1,17 +1,16 @@
-package com.hotelmanagement.hotelmanagementbackend.repository;
+package com.hotelmanagement.hotelmanagementbackend.hotel.repository;
 
 import com.hotelmanagement.hotelmanagementbackend.hotel.entity.Hotel;
-import com.hotelmanagement.hotelmanagementbackend.hotel.repository.HotelRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest
+@SpringBootTest
 class HotelRepositoryTest {
 
     @Autowired
