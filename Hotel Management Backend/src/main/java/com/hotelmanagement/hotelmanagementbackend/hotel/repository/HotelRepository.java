@@ -18,5 +18,5 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer> {
 
     boolean existsByNameAndLocation(String name, String location);
 
-    // one pending
+    Page<Hotel> findByAmenities_AmenityId(Integer amenityId, Pageable pageable);
 }
