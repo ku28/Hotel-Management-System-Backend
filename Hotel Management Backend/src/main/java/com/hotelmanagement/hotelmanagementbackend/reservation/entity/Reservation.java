@@ -1,11 +1,7 @@
 package com.hotelmanagement.hotelmanagementbackend.reservation.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.hotelmanagement.hotelmanagementbackend.room.entity.Room;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,5 +39,7 @@ public class Reservation {
     @Column(name = "check_out_date")
     private LocalDate checkOutDate;
 
-   // todo one pending
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id")
+    private Room room;
 }
