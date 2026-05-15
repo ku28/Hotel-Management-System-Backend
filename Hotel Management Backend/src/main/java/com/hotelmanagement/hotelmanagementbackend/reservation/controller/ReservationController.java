@@ -39,15 +39,6 @@ public class ReservationController {
         return ResponseEntity.ok(ApiResponse.success("SUCCESS", "Reservation retrieved", response));
     }
 
-    @PostMapping("/post")
-    @Operation(summary = "Create a new reservation")
-    public ResponseEntity<ApiResponse<ReservationResponseDto>> createReservation(
-            @Valid @RequestBody ReservationRequestDto dto) {
-        ReservationResponseDto response = reservationService.createReservation(dto);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success("POSTSUCCESS", "Reservation added successfully", response));
-    }
-
     @GetMapping("/all")
     @Operation(summary = "Get all reservations")
     public ResponseEntity<ApiResponse<PagedResponse<ReservationResponseDto>>> getAllReservations(
@@ -77,8 +68,6 @@ public class ReservationController {
         return ResponseEntity.ok(ApiResponse.success("SUCCESS", "Reservations retrieved", response));
     }
 
-
-
     @GetMapping("/date-range")
     @Operation(summary = "Get reservations by date range")
     public ResponseEntity<ApiResponse<PagedResponse<ReservationResponseDto>>> getByDateRange(
@@ -90,6 +79,14 @@ public class ReservationController {
         PagedResponse<ReservationResponseDto> response =
                 reservationService.getReservationsByDateRange(startDate, endDate, pageable);
         return ResponseEntity.ok(ApiResponse.success("SUCCESS", "Reservations retrieved", response));
+    }
+
+    @GetMapping("/room/{room_id}/available-after")
+    @Operation(summary = "Get the latest checkout date for a room")
+    public ResponseEntity<ApiResponse<LocalDate>> getRoomAvailableAfter(
+            @PathVariable("room_id") Integer roomId) {
+        LocalDate availableAfter = reservationService.getRoomAvailableAfter(roomId);
+        return ResponseEntity.ok(ApiResponse.success("SUCCESS", "Room availability date retrieved", availableAfter));
     }
 
     @PutMapping("/update/{reservation_id}")
