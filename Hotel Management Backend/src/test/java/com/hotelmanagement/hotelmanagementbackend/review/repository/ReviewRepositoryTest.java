@@ -27,14 +27,6 @@ public class ReviewRepositoryTest {
     @Autowired
     private ReservationRepository reservationRepository;
 
-    @BeforeEach
-    void setup() {
-
-        reviewRepository.deleteAll();
-
-        reservationRepository.deleteAll();
-    }
-
     @Test
     void shouldSaveReviewSuccessfully() {
 
@@ -114,7 +106,7 @@ public class ReviewRepositoryTest {
         Review latestReview = Review.builder()
                 .rating(5)
                 .comment("Latest Review")
-                .reviewDate(LocalDate.now())
+                .reviewDate(LocalDate.of(2027,1,1))
                 .build();
 
         reviewRepository.save(oldReview);
