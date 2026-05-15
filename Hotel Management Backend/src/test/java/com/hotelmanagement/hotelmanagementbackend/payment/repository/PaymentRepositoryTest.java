@@ -29,7 +29,6 @@ class PaymentRepositoryTest {
 
     @BeforeEach
     void cleanDatabase() {
-
         paymentRepository.deleteAll();
     }
 
