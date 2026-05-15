@@ -55,13 +55,14 @@ class RoomTypeRepositoryTest {
 
         // Assert
         assertThat(result.getContent()).hasSize(1);
+
         assertThat(result.getContent().get(0).getTypeName())
                 .isEqualTo("Deluxe");
     }
 
     @Test
-    @DisplayName("shouldCheckIfRoomTypeExistsByName")
-    void shouldCheckIfRoomTypeExistsByName() {
+    @DisplayName("shouldCheckIfRoomTypeExists")
+    void shouldCheckIfRoomTypeExists() {
 
         // Arrange
         RoomType deluxe = RoomType.builder()
