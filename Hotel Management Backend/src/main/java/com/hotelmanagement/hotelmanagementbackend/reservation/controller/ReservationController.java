@@ -39,6 +39,15 @@ public class ReservationController {
         return ResponseEntity.ok(ApiResponse.success("SUCCESS", "Reservation retrieved", response));
     }
 
+    @PostMapping("/post")
+    @Operation(summary = "Create a new reservation")
+    public ResponseEntity<ApiResponse<ReservationResponseDto>> createReservation(
+            @Valid @RequestBody ReservationRequestDto dto) {
+        ReservationResponseDto response = reservationService.createReservation(dto);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success("POSTSUCCESS", "Reservation added successfully", response));
+    }
+
     @GetMapping("/all")
     @Operation(summary = "Get all reservations")
     public ResponseEntity<ApiResponse<PagedResponse<ReservationResponseDto>>> getAllReservations(
@@ -67,6 +76,8 @@ public class ReservationController {
         PagedResponse<ReservationResponseDto> response = reservationService.getReservationsByEmail(email, pageable);
         return ResponseEntity.ok(ApiResponse.success("SUCCESS", "Reservations retrieved", response));
     }
+
+
 
     @GetMapping("/date-range")
     @Operation(summary = "Get reservations by date range")
