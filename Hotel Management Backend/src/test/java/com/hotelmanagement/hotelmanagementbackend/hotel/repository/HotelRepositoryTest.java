@@ -1,20 +1,46 @@
 package com.hotelmanagement.hotelmanagementbackend.hotel.repository;
 
+import com.hotelmanagement.hotelmanagementbackend.repository.RepositoryDataJpaTest;
 import com.hotelmanagement.hotelmanagementbackend.hotel.entity.Hotel;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@RepositoryDataJpaTest
 class HotelRepositoryTest {
 
     @Autowired
     private HotelRepository hotelRepository;
+
+    @BeforeEach
+    void setUp() {
+        hotelRepository.deleteAll();
+        hotelRepository.save(Hotel.builder()
+                .name("Oberoi")
+                .location("Delhi")
+                .description("Luxury hotel")
+                .build());
+        hotelRepository.save(Hotel.builder()
+                .name("Taj Palace")
+                .location("Delhi")
+                .description("Premium hotel")
+                .build());
+        hotelRepository.save(Hotel.builder()
+                .name("Radisson Blu")
+                .location("Mumbai")
+                .description("Business hotel")
+                .build());
+        hotelRepository.save(Hotel.builder()
+                .name("Hayat Regency")
+                .location("Chandigarh")
+                .description("City hotel")
+                .build());
+    }
 
     @Test
     @DisplayName("shouldReturnHotelsByLocationIgnoreCase")

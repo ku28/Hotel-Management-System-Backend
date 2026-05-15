@@ -1,11 +1,7 @@
 package com.hotelmanagement.hotelmanagementbackend.payment.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.hotelmanagement.hotelmanagementbackend.reservation.entity.Reservation;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,5 +38,7 @@ public class Payment {
     @Column(name = "payment_method", length = 50)
     private String paymentMethod;
 
-//    to do reservation connection
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reservation_id")
+    private Reservation reservation;
 }

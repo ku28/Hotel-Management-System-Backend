@@ -1,12 +1,13 @@
 package com.hotelmanagement.hotelmanagementbackend.review.repository;
 
 import com.hotelmanagement.hotelmanagementbackend.review.entity.Review;
+import com.hotelmanagement.hotelmanagementbackend.reservation.entity.Reservation;
+import com.hotelmanagement.hotelmanagementbackend.reservation.repository.ReservationRepository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.data.domain.Page;
@@ -23,11 +24,8 @@ public class ReviewRepositoryTest {
     @Autowired
     private ReviewRepository reviewRepository;
 
-    @BeforeEach
-    void setup() {
-
-        reviewRepository.deleteAll();
-    }
+    @Autowired
+    private ReservationRepository reservationRepository;
 
     @Test
     void shouldSaveReviewSuccessfully() {
@@ -108,7 +106,7 @@ public class ReviewRepositoryTest {
         Review latestReview = Review.builder()
                 .rating(5)
                 .comment("Latest Review")
-                .reviewDate(LocalDate.now())
+                .reviewDate(LocalDate.of(2027,1,1))
                 .build();
 
         reviewRepository.save(oldReview);
@@ -149,5 +147,77 @@ public class ReviewRepositoryTest {
                 );
 
         assertFalse(deletedReview.isPresent());
+    }
+
+    @Test
+    void shouldReturnReviewsByReservationId() {
+
+        Reservation reservation = Reservation.builder()
+                .guestName("Surya")
+                .guestEmail("surya@gmail.com")
+                .guestPhone("9876543210")
+                .checkInDate(LocalDate.now())
+                .checkOutDate(LocalDate.now().plusDays(2))
+                .build();
+
+        reservation =
+                reservationRepository.save(reservation);
+
+        Review review = Review.builder()
+                .reservation(reservation)
+                .rating(5)
+                .comment("Excellent Stay")
+                .reviewDate(LocalDate.now())
+                .build();
+
+        reviewRepository.save(review);
+
+        Page<Review> reviews =
+                reviewRepository.findByReservation_ReservationId(
+                        reservation.getReservationId(),
+                        PageRequest.of(0,5)
+                );
+
+        assertFalse(reviews.isEmpty());
+
+        assertEquals(
+                reservation.getReservationId(),
+                reviews.getContent()
+                        .get(0)
+                        .getReservation()
+                        .getReservationId()
+        );
+    }
+
+    @Test
+    void shouldCheckIfReviewExistsForReservation() {
+
+        Reservation reservation = Reservation.builder()
+                .guestName("Rahul")
+                .guestEmail("rahul@gmail.com")
+                .guestPhone("9999999999")
+                .checkInDate(LocalDate.now())
+                .checkOutDate(LocalDate.now().plusDays(1))
+                .build();
+
+        reservation =
+                reservationRepository.save(reservation);
+
+        Review review = Review.builder()
+                .reservation(reservation)
+                .rating(4)
+                .comment("Nice Hotel")
+                .reviewDate(LocalDate.now())
+                .build();
+
+        reviewRepository.save(review);
+
+        boolean exists =
+                reviewRepository
+                        .existsByReservation_ReservationId(
+                                reservation.getReservationId()
+                        );
+
+        assertTrue(exists);
     }
 }
