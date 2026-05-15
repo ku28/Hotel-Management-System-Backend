@@ -2,25 +2,23 @@ package com.hotelmanagement.hotelmanagementbackend.hotel.repository;
 
 import com.hotelmanagement.hotelmanagementbackend.hotel.entity.Amenity;
 import com.hotelmanagement.hotelmanagementbackend.hotel.entity.Hotel;
+import com.hotelmanagement.hotelmanagementbackend.repository.RepositoryDataJpaTest;
 import com.hotelmanagement.hotelmanagementbackend.room.entity.Room;
 import com.hotelmanagement.hotelmanagementbackend.room.entity.RoomType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-@Transactional
+@RepositoryDataJpaTest
 @DisplayName("Amenity Repository Tests")
 class AmenityRepositoryTest {
 
