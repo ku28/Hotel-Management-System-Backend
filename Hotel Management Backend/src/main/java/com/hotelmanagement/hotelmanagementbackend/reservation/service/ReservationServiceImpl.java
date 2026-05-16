@@ -36,7 +36,7 @@ public class ReservationServiceImpl implements ReservationService {
         this.roomRepository = roomRepository;
         this.reservationMapper = reservationMapper;
     }
-    
+
     @Override
     @Transactional(readOnly = true)
     public ReservationResponseDto getReservationById(Integer reservationId) {
