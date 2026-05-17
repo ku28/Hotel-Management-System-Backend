@@ -38,6 +38,40 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @CacheEvict(value = {"reservations", "rooms"}, allEntries = true)
+    public ReservationResponseDto createReservation(ReservationRequestDto dto) {
+        if (dto.getCheckInDate().isBefore(LocalDate.now())) {
+            throw new BadRequestException("Check-in date cannot be before today");
+        }
+
+        if (!dto.getCheckInDate().isBefore(dto.getCheckOutDate())) {
+            throw new BadRequestException("Check-out date must be after check-in date");
+        }
+
+        Room room = roomRepository.findById(dto.getRoomId())
+                .orElseThrow(() -> new ResourceNotFoundException("Room", "roomId", dto.getRoomId()));
+
+        if (Boolean.FALSE.equals(room.getIsAvailable())) {
+            throw new BadRequestException("Room is already booked");
+        }
+
+        boolean isBooked = reservationRepository
+                .existsByRoom_RoomIdAndCheckInDateLessThanEqualAndCheckOutDateGreaterThanEqual(
+                        dto.getRoomId(), dto.getCheckOutDate(), dto.getCheckInDate());
+
+        if (isBooked) {
+            throw new BadRequestException("Room is already booked for the selected dates");
+        }
+
+        Reservation reservation = reservationMapper.toEntity(dto);
+        reservation.setRoom(room);
+        Reservation saved = reservationRepository.save(reservation);
+        room.setIsAvailable(false);
+        roomRepository.save(room);
+        return reservationMapper.toResponseDto(saved);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public ReservationResponseDto getReservationById(Integer reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
