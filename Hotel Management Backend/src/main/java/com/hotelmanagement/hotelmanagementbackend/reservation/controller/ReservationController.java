@@ -29,7 +29,14 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-
+    @PostMapping("/post")
+    @Operation(summary = "Create a new reservation")
+    public ResponseEntity<ApiResponse<ReservationResponseDto>> createReservation(
+            @Valid @RequestBody ReservationRequestDto dto) {
+        ReservationResponseDto response = reservationService.createReservation(dto);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success("POSTSUCCESS", "Reservation added successfully", response));
+    }
 
     @GetMapping("/{reservation_id}")
     @Operation(summary = "Get reservation by ID")

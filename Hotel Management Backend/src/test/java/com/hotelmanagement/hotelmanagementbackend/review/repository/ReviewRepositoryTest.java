@@ -1,14 +1,13 @@
 package com.hotelmanagement.hotelmanagementbackend.review.repository;
 
+import com.hotelmanagement.hotelmanagementbackend.repository.RepositoryDataJpaTest;
 import com.hotelmanagement.hotelmanagementbackend.review.entity.Review;
 import com.hotelmanagement.hotelmanagementbackend.reservation.entity.Reservation;
 import com.hotelmanagement.hotelmanagementbackend.reservation.repository.ReservationRepository;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,8 +17,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-public class ReviewRepositoryTest {
+@RepositoryDataJpaTest
+class ReviewRepositoryTest {
 
     @Autowired
     private ReviewRepository reviewRepository;
