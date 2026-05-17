@@ -1,11 +1,11 @@
 package com.hotelmanagement.hotelmanagementbackend.auth.repository;
 
 import com.hotelmanagement.hotelmanagementbackend.auth.entity.User;
+import com.hotelmanagement.hotelmanagementbackend.repository.RepositoryDataJpaTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -14,7 +14,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@RepositoryDataJpaTest
 class UserRepositoryTest {
 
     @Autowired

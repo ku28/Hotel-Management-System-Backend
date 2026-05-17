@@ -1,12 +1,12 @@
 package com.hotelmanagement.hotelmanagementbackend.payment.repository;
 
 import com.hotelmanagement.hotelmanagementbackend.payment.entity.Payment;
+import com.hotelmanagement.hotelmanagementbackend.repository.RepositoryDataJpaTest;
 import com.hotelmanagement.hotelmanagementbackend.reservation.entity.Reservation;
 import com.hotelmanagement.hotelmanagementbackend.reservation.repository.ReservationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +18,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@RepositoryDataJpaTest
 class PaymentRepositoryTest {
 
     @Autowired
@@ -29,7 +29,6 @@ class PaymentRepositoryTest {
 
     @BeforeEach
     void cleanDatabase() {
-        paymentRepository.deleteAll();
     }
 
     @Test
@@ -111,7 +110,7 @@ class PaymentRepositoryTest {
                 Payment.builder()
                         .amount(BigDecimal.valueOf(100))
                         .paymentDate(LocalDate.now())
-                        .paymentStatus("PAID")
+                        .paymentStatus("REPO_PAID_7191")
                         .paymentMethod("CARD")
                         .reservation(reservation1)
                         .build(),
@@ -119,7 +118,7 @@ class PaymentRepositoryTest {
                 Payment.builder()
                         .amount(BigDecimal.valueOf(200))
                         .paymentDate(LocalDate.now())
-                        .paymentStatus("pending")
+                        .paymentStatus("REPO_PENDING_7191")
                         .paymentMethod("CASH")
                         .reservation(reservation2)
                         .build(),
@@ -127,7 +126,7 @@ class PaymentRepositoryTest {
                 Payment.builder()
                         .amount(BigDecimal.valueOf(300))
                         .paymentDate(LocalDate.now())
-                        .paymentStatus("PAID")
+                        .paymentStatus("REPO_PAID_7191")
                         .paymentMethod("UPI")
                         .reservation(reservation3)
                         .build()
@@ -137,7 +136,7 @@ class PaymentRepositoryTest {
 
         Page<Payment> result =
                 paymentRepository.findByPaymentStatusIgnoreCase(
-                        "paid",
+                        "repo_paid_7191",
                         pageable
                 );
 
@@ -281,7 +280,7 @@ class PaymentRepositoryTest {
     }
 
     @Test
-    void testFindAllPayments() {
+    void testCountPayments() {
 
         Reservation reservation1 = reservationRepository.save(
 
@@ -324,8 +323,13 @@ class PaymentRepositoryTest {
                         .build()
         ));
 
-        List<Payment> payments = paymentRepository.findAll();
-
-        assertThat(payments).hasSize(2);
+        assertThat(paymentRepository.findByReservation_ReservationId(
+                reservation1.getReservationId(),
+                PageRequest.of(0, 10)
+        ).getContent()).hasSize(1);
+        assertThat(paymentRepository.findByReservation_ReservationId(
+                reservation2.getReservationId(),
+                PageRequest.of(0, 10)
+        ).getContent()).hasSize(1);
     }
 }

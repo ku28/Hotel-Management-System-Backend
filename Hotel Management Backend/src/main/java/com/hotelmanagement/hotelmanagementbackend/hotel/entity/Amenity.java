@@ -1,6 +1,5 @@
 package com.hotelmanagement.hotelmanagementbackend.hotel.entity;
 
-import com.hotelmanagement.hotelmanagementbackend.room.entity.Room;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -44,5 +43,5 @@ public class Amenity {
 
     @ManyToMany(mappedBy = "amenities", fetch = FetchType.LAZY)
     @Builder.Default
-    private Set<Room> rooms = new HashSet<>();
+    private Set<com.hotelmanagement.hotelmanagementbackend.room.entity.Room> rooms = new HashSet<>();
 }

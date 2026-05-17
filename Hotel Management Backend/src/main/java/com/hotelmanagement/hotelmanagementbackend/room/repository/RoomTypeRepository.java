@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository;
         excerptProjection = RoomTypeProjection.class)
 public interface RoomTypeRepository extends JpaRepository<RoomType, Integer> {
 
-
     @RestResource(path = "by-type-name", rel = "by-type-name")
     Page<RoomType> findByTypeNameContainingIgnoreCase(@Param("typeName") String typeName, Pageable pageable);
 

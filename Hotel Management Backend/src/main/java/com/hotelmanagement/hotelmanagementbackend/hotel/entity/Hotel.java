@@ -49,5 +49,5 @@ public class Hotel {
             inverseJoinColumns = @JoinColumn(name = "amenity_id")
     )
     @Builder.Default
-    private Set<Amenity> amenities = new HashSet<>();
+    private Set<com.hotelmanagement.hotelmanagementbackend.hotel.entity.Amenity> amenities = new HashSet<>();
 }
