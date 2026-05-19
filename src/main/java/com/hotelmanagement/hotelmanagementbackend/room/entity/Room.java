@@ -22,7 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "Room")
+@Table(name = "room")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -51,7 +51,7 @@ public class Room {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "RoomAmenity",
+            name = "room_amenity",
             joinColumns = @JoinColumn(name = "room_id"),
             inverseJoinColumns = @JoinColumn(name = "amenity_id")
     )
