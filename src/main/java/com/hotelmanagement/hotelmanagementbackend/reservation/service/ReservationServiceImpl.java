@@ -13,6 +13,7 @@ import com.hotelmanagement.hotelmanagementbackend.room.entity.Room;
 import com.hotelmanagement.hotelmanagementbackend.room.repository.RoomRepository;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,11 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    @CacheEvict(value = {"reservations", "rooms", "dashboard"}, allEntries = true)
+    @Caching(evict = {
+        @CacheEvict(value = "reservations", allEntries = true),
+        @CacheEvict(value = "rooms", allEntries = true),
+        @CacheEvict(value = "dashboard", allEntries = true)
+    })
     public ReservationResponseDto createReservation(ReservationRequestDto dto) {
         if (dto.getCheckInDate().isBefore(LocalDate.now())) {
             throw new BadRequestException("Check-in date cannot be before today");
@@ -83,7 +88,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "reservations", key = "'all-' + #pageable.pageNumber + '-' + #pageable.pageSize + '-' + #pageable.sort")
+    @Cacheable(value = "reservations", key = "'all-p' + #pageable.pageNumber + '-s' + #pageable.pageSize")
     public PagedResponse<ReservationResponseDto> getAllReservations(Pageable pageable) {
         Page<Reservation> page = reservationRepository.findByDeletedFalse(pageable);
         List<ReservationResponseDto> dtos = page.getContent().stream()
@@ -94,7 +99,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "reservations", key = "'email-' + #email + '-' + #pageable.pageNumber + '-' + #pageable.pageSize")
+    @Cacheable(value = "reservations", key = "'email-' + #email + '-p' + #pageable.pageNumber + '-s' + #pageable.pageSize")
     public PagedResponse<ReservationResponseDto> getReservationsByEmail(String email, Pageable pageable) {
         Page<Reservation> page = reservationRepository.findByGuestEmailIgnoreCaseAndDeletedFalse(email, pageable);
         List<ReservationResponseDto> dtos = page.getContent().stream()
@@ -117,7 +122,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "reservations", key = "'dateRange-' + #startDate + '-' + #endDate + '-' + #pageable.pageNumber")
+    @Cacheable(value = "reservations", key = "'dateRange-' + #startDate + '-' + #endDate + '-p' + #pageable.pageNumber")
     public PagedResponse<ReservationResponseDto> getReservationsByDateRange(
             LocalDate startDate, LocalDate endDate, Pageable pageable) {
         Page<Reservation> page = reservationRepository
@@ -129,7 +134,10 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    @CacheEvict(value = {"reservations", "dashboard"}, allEntries = true)
+    @Caching(evict = {
+        @CacheEvict(value = "reservations", allEntries = true),
+        @CacheEvict(value = "dashboard", allEntries = true)
+    })
     public ReservationResponseDto updateReservation(Integer reservationId, ReservationRequestDto dto) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Reservation", "reservationId", reservationId));
@@ -145,7 +153,11 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    @CacheEvict(value = {"reservations", "rooms", "dashboard"}, allEntries = true)
+    @Caching(evict = {
+        @CacheEvict(value = "reservations", allEntries = true),
+        @CacheEvict(value = "rooms", allEntries = true),
+        @CacheEvict(value = "dashboard", allEntries = true)
+    })
     public void deleteReservation(Integer reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Reservation", "reservationId", reservationId));

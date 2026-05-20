@@ -13,6 +13,7 @@ import com.hotelmanagement.hotelmanagementbackend.room.entity.RoomType;
 import com.hotelmanagement.hotelmanagementbackend.room.repository.RoomRepository;
 import com.hotelmanagement.hotelmanagementbackend.room.repository.RoomTypeRepository;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,7 +40,10 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    @CacheEvict(value = {"rooms", "dashboard"}, allEntries = true)
+    @Caching(evict = {
+        @CacheEvict(value = "rooms", allEntries = true),
+        @CacheEvict(value = "dashboard", allEntries = true)
+    })
     public RoomResponseDto createRoom(RoomRequestDto dto) {
         if (roomRepository.existsByRoomNumberAndRoomType_RoomTypeId(dto.getRoomNumber(), dto.getRoomTypeId())) {
             throw new ResourceAlreadyExistsException("Room", "roomNumber", dto.getRoomNumber());
@@ -56,7 +60,10 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    @CacheEvict(value = {"rooms", "dashboard"}, allEntries = true)
+    @Caching(evict = {
+        @CacheEvict(value = "rooms", allEntries = true),
+        @CacheEvict(value = "dashboard", allEntries = true)
+    })
     public RoomResponseDto updateRoom(Integer roomId, RoomRequestDto dto) {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new ResourceNotFoundException("Room", "roomId", roomId));
@@ -76,7 +83,10 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    @CacheEvict(value = {"rooms", "dashboard"}, allEntries = true)
+    @Caching(evict = {
+        @CacheEvict(value = "rooms", allEntries = true),
+        @CacheEvict(value = "dashboard", allEntries = true)
+    })
     public void deleteRoom(Integer roomId) {
         if (!roomRepository.existsById(roomId)) {
             throw new ResourceNotFoundException("Room", "roomId", roomId);
@@ -85,7 +95,10 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    @CacheEvict(value = {"rooms", "dashboard"}, allEntries = true)
+    @Caching(evict = {
+        @CacheEvict(value = "rooms", allEntries = true),
+        @CacheEvict(value = "dashboard", allEntries = true)
+    })
     public void addAmenityToRoom(RoomAmenityRequestDto dto) {
         Room room = roomRepository.findById(dto.getRoomId())
                 .orElseThrow(() -> new ResourceNotFoundException("Room", "roomId", dto.getRoomId()));

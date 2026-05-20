@@ -7,6 +7,7 @@ import com.hotelmanagement.hotelmanagementbackend.hotel.entity.Hotel;
 import com.hotelmanagement.hotelmanagementbackend.hotel.repository.AmenityRepository;
 import com.hotelmanagement.hotelmanagementbackend.hotel.repository.HotelRepository;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +24,10 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    @CacheEvict(value = {"hotels", "rooms"}, allEntries = true)
+    @Caching(evict = {
+        @CacheEvict(value = "hotels", allEntries = true),
+        @CacheEvict(value = "rooms", allEntries = true)
+    })
     public void addAmenityToHotel(HotelAmenityRequestDto dto) {
         Hotel hotel = hotelRepository.findById(dto.getHotelId())
                 .orElseThrow(() -> new ResourceNotFoundException("hotel", "hotelId", dto.getHotelId()));
@@ -34,7 +38,11 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    @CacheEvict(value = {"hotels", "rooms", "dashboard"}, allEntries = true)
+    @Caching(evict = {
+        @CacheEvict(value = "hotels", allEntries = true),
+        @CacheEvict(value = "rooms", allEntries = true),
+        @CacheEvict(value = "dashboard", allEntries = true)
+    })
     public void softDeleteHotel(Integer hotelId) {
         Hotel hotel = hotelRepository.findById(hotelId)
                 .orElseThrow(() -> new ResourceNotFoundException("hotel", "hotelId", hotelId));
@@ -43,7 +51,10 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    @CacheEvict(value = {"hotels", "rooms"}, allEntries = true)
+    @Caching(evict = {
+        @CacheEvict(value = "hotels", allEntries = true),
+        @CacheEvict(value = "rooms", allEntries = true)
+    })
     public void softDeleteAmenity(Integer amenityId) {
         Amenity amenity = amenityRepository.findById(amenityId)
                 .orElseThrow(() -> new ResourceNotFoundException("amenity", "amenityId", amenityId));
