@@ -3,6 +3,7 @@ package com.hotelmanagement.hotelmanagementbackend.reservation.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,7 +28,8 @@ public class ReservationRequestDto {
     private String guestEmail;
 
     @NotBlank(message = "Guest phone is required")
-    @Size(max = 20, message = "Guest phone must be less than 20 characters")
+    @Pattern(regexp = "^\\d{10}$", message = "Guest phone must be exactly 10 digits")
+    @Size(max = 10, message = "Guest phone must be exactly 10 digits")
     private String guestPhone;
 
     @NotNull(message = "Check-in date is required")

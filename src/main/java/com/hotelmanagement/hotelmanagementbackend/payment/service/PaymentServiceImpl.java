@@ -88,9 +88,10 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional(readOnly = true)
     public BigDecimal getTotalRevenue() {
-        Page<Payment> allPaid = paymentRepository.findByPaymentStatusIgnoreCase("Paid", Pageable.unpaged());
-        return allPaid.getContent().stream()
+        List<Payment> allPayments = paymentRepository.findAll();
+        return allPayments.stream()
                 .map(Payment::getAmount)
+                .filter(java.util.Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
