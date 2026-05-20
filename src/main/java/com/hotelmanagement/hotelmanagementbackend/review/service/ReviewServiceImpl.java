@@ -11,6 +11,8 @@ import com.hotelmanagement.hotelmanagementbackend.review.dto.ReviewRequestDto;
 import com.hotelmanagement.hotelmanagementbackend.review.dto.ReviewResponseDto;
 import com.hotelmanagement.hotelmanagementbackend.review.entity.Review;
 import com.hotelmanagement.hotelmanagementbackend.review.repository.ReviewRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @CacheEvict(value = {"reviews", "dashboard"}, allEntries = true)
     public ReviewResponseDto createReview(ReviewRequestDto dto) {
         if (reviewRepository.existsByReservation_ReservationId(dto.getReservationId())) {
             throw new ResourceAlreadyExistsException("Review", "reservationId", dto.getReservationId());
@@ -50,6 +53,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "reviews", key = "'id-' + #reviewId")
     public ReviewResponseDto getReviewById(Integer reviewId) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ResourceNotFoundException("Review", "reviewId", reviewId));
@@ -58,6 +62,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "reviews", key = "'all-' + #pageable.pageNumber + '-' + #pageable.pageSize + '-' + #pageable.sort")
     public PagedResponse<ReviewResponseDto> getAllReviews(Pageable pageable) {
         Page<Review> page = reviewRepository.findByDeletedFalse(pageable);
         List<ReviewResponseDto> dtos = page.getContent().stream()
@@ -68,6 +73,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "reviews", key = "'rating-' + #rating + '-' + #pageable.pageNumber + '-' + #pageable.pageSize")
     public PagedResponse<ReviewResponseDto> getReviewsByRating(Integer rating, Pageable pageable) {
         Page<Review> page = reviewRepository.findByRatingAndDeletedFalse(rating, pageable);
         List<ReviewResponseDto> dtos = page.getContent().stream()
@@ -85,6 +91,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @CacheEvict(value = {"reviews", "dashboard"}, allEntries = true)
     public ReviewResponseDto updateReview(Integer reviewId, ReviewRequestDto dto) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ResourceNotFoundException("Review", "reviewId", reviewId));
@@ -94,6 +101,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @CacheEvict(value = {"reviews", "dashboard"}, allEntries = true)
     public void deleteReview(Integer reviewId) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ResourceNotFoundException("Review", "reviewId", reviewId));

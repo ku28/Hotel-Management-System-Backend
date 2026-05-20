@@ -11,6 +11,8 @@ import com.hotelmanagement.hotelmanagementbackend.payment.entity.Payment;
 import com.hotelmanagement.hotelmanagementbackend.payment.repository.PaymentRepository;
 import com.hotelmanagement.hotelmanagementbackend.reservation.entity.Reservation;
 import com.hotelmanagement.hotelmanagementbackend.reservation.repository.ReservationRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -37,6 +39,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    @CacheEvict(value = {"payments", "dashboard"}, allEntries = true)
     public PaymentResponseDto createPayment(PaymentRequestDto dto) {
         if (paymentRepository.existsByReservation_ReservationId(dto.getReservationId())) {
             throw new ResourceAlreadyExistsException("Payment", "reservationId", dto.getReservationId());
@@ -51,6 +54,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "payments", key = "'id-' + #paymentId")
     public PaymentResponseDto getPaymentById(Integer paymentId) {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Payment", "paymentId", paymentId));
@@ -59,6 +63,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "payments", key = "'all-' + #pageable.pageNumber + '-' + #pageable.pageSize")
     public PagedResponse<PaymentResponseDto> getAllPayments(Pageable pageable) {
         Page<Payment> page = paymentRepository.findByPaymentStatusIgnoreCase("Paid", pageable);
         List<PaymentResponseDto> dtos = page.getContent().stream()
@@ -69,6 +74,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "payments", key = "'status-' + #status + '-' + #pageable.pageNumber + '-' + #pageable.pageSize")
     public PagedResponse<PaymentResponseDto> getPaymentsByStatus(String status, Pageable pageable) {
         Page<Payment> page = paymentRepository.findByPaymentStatusIgnoreCase(status, pageable);
         List<PaymentResponseDto> dtos = page.getContent().stream()
@@ -78,6 +84,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    @CacheEvict(value = {"payments", "dashboard"}, allEntries = true)
     public void deletePayment(Integer paymentId) {
         if (!paymentRepository.existsById(paymentId)) {
             throw new ResourceNotFoundException("Payment", "paymentId", paymentId);
@@ -87,6 +94,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "dashboard", key = "'totalRevenue'")
     public BigDecimal getTotalRevenue() {
         List<Payment> allPayments = paymentRepository.findAll();
         return allPayments.stream()

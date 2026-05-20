@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
@@ -13,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class PagedResponse<T> {
+public class PagedResponse<T> implements Serializable {
 
     private List<T> content;
     private int pageNumber;
@@ -23,3 +24,4 @@ public class PagedResponse<T> {
     private boolean last;
     private boolean first;
 }
+
