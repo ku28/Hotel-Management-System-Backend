@@ -60,6 +60,7 @@ public class AuthService {
                 .email(user.getEmail())
                 .fullName(user.getFullName())
                 .role(user.getRole())
+                .phone(user.getPhone())
                 .build();
     }
 
@@ -77,6 +78,7 @@ public class AuthService {
                 .email(user.getEmail())
                 .fullName(user.getFullName())
                 .role(user.getRole())
+                .phone(user.getPhone())
                 .build();
     }
 }
