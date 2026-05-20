@@ -59,7 +59,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional(readOnly = true)
     public PagedResponse<ReviewResponseDto> getAllReviews(Pageable pageable) {
-        Page<Review> page = reviewRepository.findByDeletedFalse(pageable);
+        Page<Review> page = reviewRepository.findByReviewIdGreaterThan(0, pageable);
         List<ReviewResponseDto> dtos = page.getContent().stream()
                 .map(reviewMapper::toResponseDto)
                 .collect(Collectors.toList());
@@ -69,7 +69,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional(readOnly = true)
     public PagedResponse<ReviewResponseDto> getReviewsByRating(Integer rating, Pageable pageable) {
-        Page<Review> page = reviewRepository.findByRatingAndDeletedFalse(rating, pageable);
+        Page<Review> page = reviewRepository.findByRating(rating, pageable);
         List<ReviewResponseDto> dtos = page.getContent().stream()
                 .map(reviewMapper::toResponseDto)
                 .collect(Collectors.toList());
@@ -95,9 +95,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public void deleteReview(Integer reviewId) {
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ResourceNotFoundException("Review", "reviewId", reviewId));
-        review.setDeleted(true);
-        reviewRepository.save(review);
+        if (!reviewRepository.existsById(reviewId)) {
+            throw new ResourceNotFoundException("Review", "reviewId", reviewId);
+        }
+        reviewRepository.deleteById(reviewId);
     }
 }

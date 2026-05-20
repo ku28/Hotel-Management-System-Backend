@@ -19,6 +19,4 @@ public class ReviewResponseDto implements Serializable {
     private Integer rating;
     private String comment;
     private LocalDate reviewDate;
-    private String hotelName;
-    private String guestName;
 }

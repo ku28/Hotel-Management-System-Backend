@@ -82,7 +82,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional(readOnly = true)
     public PagedResponse<ReservationResponseDto> getAllReservations(Pageable pageable) {
-        Page<Reservation> page = reservationRepository.findByDeletedFalse(pageable);
+        Page<Reservation> page = reservationRepository.findByReservationIdGreaterThan(0, pageable);
         List<ReservationResponseDto> dtos = page.getContent().stream()
                 .map(reservationMapper::toResponseDto)
                 .collect(Collectors.toList());
@@ -92,7 +92,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional(readOnly = true)
     public PagedResponse<ReservationResponseDto> getReservationsByEmail(String email, Pageable pageable) {
-        Page<Reservation> page = reservationRepository.findByGuestEmailIgnoreCaseAndDeletedFalse(email, pageable);
+        Page<Reservation> page = reservationRepository.findByGuestEmailIgnoreCase(email, pageable);
         List<ReservationResponseDto> dtos = page.getContent().stream()
                 .map(reservationMapper::toResponseDto)
                 .collect(Collectors.toList());
@@ -140,23 +140,17 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    @CacheEvict(value = {"reservations", "rooms"}, allEntries = true)
+    @CacheEvict(value = "reservations", allEntries = true)
     public void deleteReservation(Integer reservationId) {
-        Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new ResourceNotFoundException("Reservation", "reservationId", reservationId));
-        reservation.setDeleted(true);
-        reservationRepository.save(reservation);
-        // Make the room available again
-        Room room = reservation.getRoom();
-        if (room != null) {
-            room.setIsAvailable(true);
-            roomRepository.save(room);
+        if (!reservationRepository.existsById(reservationId)) {
+            throw new ResourceNotFoundException("Reservation", "reservationId", reservationId);
         }
+        reservationRepository.deleteById(reservationId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public long getTotalReservations() {
-        return reservationRepository.countByDeletedFalse();
+        return reservationRepository.count();
     }
 }

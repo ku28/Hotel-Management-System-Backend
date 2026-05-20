@@ -44,8 +44,4 @@ public class Review {
 
     @Column(name = "review_date")
     private LocalDate reviewDate;
-
-    @Column(name = "deleted")
-    @Builder.Default
-    private Boolean deleted = false;
 }

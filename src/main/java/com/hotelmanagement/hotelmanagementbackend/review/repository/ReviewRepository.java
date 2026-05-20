@@ -20,9 +20,6 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
     @RestResource(path = "by-rating", rel = "by-rating")
     Page<Review> findByRating(@Param("rating") Integer rating, Pageable pageable);
 
-    @RestResource(exported = false)
-    Page<Review> findByRatingAndDeletedFalse(Integer rating, Pageable pageable);
-
     @RestResource(path = "by-reservation", rel = "by-reservation")
     Page<Review> findByReservation_ReservationId(@Param("reservationId") Integer reservationId, Pageable pageable);
 
@@ -37,9 +34,6 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
 
     @RestResource(path = "all", rel = "all")
     Page<Review> findByReviewIdGreaterThan(@Param("reviewId") Integer reviewId, Pageable pageable);
-
-    @RestResource(exported = false)
-    Page<Review> findByDeletedFalse(Pageable pageable);
 
     @Override
     @RestResource(exported = false)

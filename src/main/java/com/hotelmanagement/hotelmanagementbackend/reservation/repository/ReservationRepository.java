@@ -15,8 +15,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 
     Page<Reservation> findByGuestEmailIgnoreCase(String guestEmail, Pageable pageable);
 
-    Page<Reservation> findByGuestEmailIgnoreCaseAndDeletedFalse(String guestEmail, Pageable pageable);
-
     Page<Reservation> findByCheckInDateGreaterThanEqualAndCheckOutDateLessThanEqual(
             LocalDate startDate, LocalDate endDate, Pageable pageable);
 
@@ -24,12 +22,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 
     Page<Reservation> findByReservationIdGreaterThan(Integer reservationId, Pageable pageable);
 
-    Page<Reservation> findByDeletedFalse(Pageable pageable);
-
     boolean existsByRoom_RoomIdAndCheckInDateLessThanEqualAndCheckOutDateGreaterThanEqual(
             Integer roomId, LocalDate checkOutDate, LocalDate checkInDate);
 
     long count();
-
-    long countByDeletedFalse();
 }
