@@ -8,7 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import org.hibernate.annotations.Where;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +19,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "amenity")
-@Where(clause = "deleted = false")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -41,7 +39,7 @@ public class Amenity {
 
     @Column(name = "deleted")
     @Builder.Default
-    private Boolean deleted = false;
+    private boolean deleted = false;
 
     @ManyToMany(mappedBy = "amenities", fetch = FetchType.LAZY)
     @Builder.Default

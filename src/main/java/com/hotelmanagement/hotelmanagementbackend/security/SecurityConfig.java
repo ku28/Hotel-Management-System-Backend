@@ -66,7 +66,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/hotels/**", "/api/amenities/**", "/api/room-types/**")
                         .hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/room-management/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/api/hotel-management/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/roomAmenity/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/review-management/**").authenticated()
                         .requestMatchers("/api/payments/**", "/api/reservations/**").authenticated()

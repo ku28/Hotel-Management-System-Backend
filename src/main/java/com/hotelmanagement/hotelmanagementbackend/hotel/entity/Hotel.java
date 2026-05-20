@@ -10,7 +10,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import org.hibernate.annotations.Where;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,7 +21,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "hotel")
-@Where(clause = "deleted = false")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -46,11 +44,11 @@ public class Hotel {
 
     @Column(name = "deleted")
     @Builder.Default
-    private Boolean deleted = false;
+    private boolean deleted = false;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "HotelAmenity",
+            name = "hotel_amenity",
             joinColumns = @JoinColumn(name = "hotel_id"),
             inverseJoinColumns = @JoinColumn(name = "amenity_id")
     )

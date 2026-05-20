@@ -2,7 +2,6 @@ package com.hotelmanagement.hotelmanagementbackend.auth.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +27,6 @@ public class RegisterRequestDto {
     @Size(min = 6, max = 255, message = "Password must be between 6 and 255 characters")
     private String password;
 
-    @NotBlank(message = "Phone number is required")
-    @Pattern(regexp = "^\\d{10}$", message = "Phone number must be exactly 10 digits")
+    @Size(max = 20, message = "Phone must be less than 20 characters")
     private String phone;
 }

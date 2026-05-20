@@ -78,10 +78,10 @@ public class RoomServiceImpl implements RoomService {
     @Override
     @CacheEvict(value = "rooms", allEntries = true)
     public void deleteRoom(Integer roomId) {
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new ResourceNotFoundException("Room", "roomId", roomId));
-        room.setDeleted(true);
-        roomRepository.save(room);
+        if (!roomRepository.existsById(roomId)) {
+            throw new ResourceNotFoundException("Room", "roomId", roomId);
+        }
+        roomRepository.deleteById(roomId);
     }
 
     @Override
