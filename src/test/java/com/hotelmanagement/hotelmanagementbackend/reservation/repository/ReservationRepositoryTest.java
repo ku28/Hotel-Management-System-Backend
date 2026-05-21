@@ -146,7 +146,7 @@ class ReservationRepositoryTest {
 
         boolean exists =
                 reservationRepository
-                        .existsByRoom_RoomIdAndCheckInDateLessThanEqualAndCheckOutDateGreaterThanEqual(
+                        .existsByRoom_RoomIdAndCheckInDateLessThanEqualAndCheckOutDateGreaterThanEqualAndDeletedFalse(
                                 room.getRoomId(),
                                 LocalDate.of(2026, 7, 14),
                                 LocalDate.of(2026, 7, 12)

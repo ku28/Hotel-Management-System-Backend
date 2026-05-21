@@ -69,7 +69,7 @@ class ReservationServiceImplTest {
     @Test @DisplayName("shouldCreateReservationSuccessfully")
     void shouldCreateReservationSuccessfully() {
         when(roomRepository.findById(1)).thenReturn(Optional.of(testRoom));
-        when(reservationRepository.existsByRoom_RoomIdAndCheckInDateLessThanEqualAndCheckOutDateGreaterThanEqual(
+        when(reservationRepository.existsByRoom_RoomIdAndCheckInDateLessThanEqualAndCheckOutDateGreaterThanEqualAndDeletedFalse(
                 anyInt(), any(), any())).thenReturn(false);
         when(reservationMapper.toEntity(testRequestDto)).thenReturn(testReservation);
         when(reservationRepository.save(any())).thenReturn(testReservation);
@@ -95,7 +95,7 @@ class ReservationServiceImplTest {
     @Test @DisplayName("shouldRejectReservationWhenRoomAlreadyBooked")
     void shouldRejectReservationWhenRoomAlreadyBooked() {
         when(roomRepository.findById(1)).thenReturn(Optional.of(testRoom));
-        when(reservationRepository.existsByRoom_RoomIdAndCheckInDateLessThanEqualAndCheckOutDateGreaterThanEqual(
+        when(reservationRepository.existsByRoom_RoomIdAndCheckInDateLessThanEqualAndCheckOutDateGreaterThanEqualAndDeletedFalse(
                 anyInt(), any(), any())).thenReturn(true);
         assertThatThrownBy(() -> reservationService.createReservation(testRequestDto))
                 .isInstanceOf(BadRequestException.class).hasMessageContaining("already booked");
@@ -128,14 +128,14 @@ class ReservationServiceImplTest {
 
     @Test @DisplayName("shouldDeleteReservationSuccessfully")
     void shouldDeleteReservationSuccessfully() {
-        when(reservationRepository.existsById(1)).thenReturn(true);
+        when(reservationRepository.findById(1)).thenReturn(Optional.of(testReservation));
         reservationService.deleteReservation(1);
-        verify(reservationRepository).deleteById(1);
+        verify(reservationRepository).save(any());
     }
 
     @Test @DisplayName("shouldThrowExceptionWhenDeletingNonExistentReservation")
     void shouldThrowExceptionWhenDeletingNonExistentReservation() {
-        when(reservationRepository.existsById(999)).thenReturn(false);
+        when(reservationRepository.findById(999)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> reservationService.deleteReservation(999))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
@@ -155,7 +155,7 @@ class ReservationServiceImplTest {
 
     @Test @DisplayName("shouldReturnTotalReservationCount")
     void shouldReturnTotalReservationCount() {
-        when(reservationRepository.count()).thenReturn(42L);
+        when(reservationRepository.countByDeletedFalse()).thenReturn(42L);
         assertThat(reservationService.getTotalReservations()).isEqualTo(42);
     }
 }

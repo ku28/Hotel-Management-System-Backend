@@ -22,11 +22,13 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 
     Page<Reservation> findByRoom_RoomId(Integer roomId, Pageable pageable);
 
+    Page<Reservation> findByRoom_RoomIdAndDeletedFalse(Integer roomId, Pageable pageable);
+
     Page<Reservation> findByReservationIdGreaterThan(Integer reservationId, Pageable pageable);
 
     Page<Reservation> findByDeletedFalse(Pageable pageable);
 
-    boolean existsByRoom_RoomIdAndCheckInDateLessThanEqualAndCheckOutDateGreaterThanEqual(
+    boolean existsByRoom_RoomIdAndCheckInDateLessThanEqualAndCheckOutDateGreaterThanEqualAndDeletedFalse(
             Integer roomId, LocalDate checkOutDate, LocalDate checkInDate);
 
     long count();

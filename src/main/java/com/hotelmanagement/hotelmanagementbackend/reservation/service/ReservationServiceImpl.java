@@ -62,7 +62,7 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
         boolean isBooked = reservationRepository
-                .existsByRoom_RoomIdAndCheckInDateLessThanEqualAndCheckOutDateGreaterThanEqual(
+                .existsByRoom_RoomIdAndCheckInDateLessThanEqualAndCheckOutDateGreaterThanEqualAndDeletedFalse(
                         dto.getRoomId(), dto.getCheckOutDate(), dto.getCheckInDate());
 
         if (isBooked) {
@@ -114,7 +114,7 @@ public class ReservationServiceImpl implements ReservationService {
         if (!roomRepository.existsById(roomId)) {
             throw new ResourceNotFoundException("Room", "roomId", roomId);
         }
-        Page<Reservation> page = reservationRepository.findByRoom_RoomId(
+        Page<Reservation> page = reservationRepository.findByRoom_RoomIdAndDeletedFalse(
                 roomId, org.springframework.data.domain.PageRequest.of(
                         0, 1, org.springframework.data.domain.Sort.by("checkOutDate").descending()));
         return page.hasContent() ? page.getContent().get(0).getCheckOutDate() : null;
