@@ -34,4 +34,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
     long count();
 
     long countByDeletedFalse();
+
+    long countByGuestEmailIgnoreCaseAndDeletedFalse(String guestEmail);
 }

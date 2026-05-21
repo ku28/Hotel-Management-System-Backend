@@ -19,4 +19,5 @@ public class UserResponseDto implements Serializable {
     private String phone;
     private String role;
     private Boolean enabled;
+    private Long reservationCount;
 }
